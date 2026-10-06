@@ -233,7 +233,7 @@ describe('DateRangePicker', () => {
         endDate: new Date(2026, 7, 5)
       })
 
-      const values = [...fixtureEl.querySelectorAll('#picker input[type="hidden"]')].map(input => input.value)
+      const values = [...fixtureEl.querySelectorAll('#picker .form-date-time > input')].map(input => input.value)
       expect(values).toEqual(['Week 29, 2026', 'Week 32, 2026'])
     })
 
@@ -244,7 +244,7 @@ describe('DateRangePicker', () => {
         endDate: new Date(2026, 10, 15)
       })
 
-      const values = [...fixtureEl.querySelectorAll('#picker input[type="hidden"]')].map(input => input.value)
+      const values = [...fixtureEl.querySelectorAll('#picker .form-date-time > input')].map(input => input.value)
       expect(values).toEqual(['Q1 2026', 'Q4 2026'])
     })
   })

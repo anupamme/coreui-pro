@@ -1612,6 +1612,15 @@ validation and the arrow between them. Two consequences:
   right-to-left; the direction is read from the element's computed style
   instead of `document.documentElement.dir`, so a `dir="rtl"` ancestor works
   and not only a document-level direction.
+- <span class="badge text-danger-emphasis bg-danger-subtle">Breaking</span>
+  **A required field blocks the form.** The value moved from an
+  `<input type="hidden">`, which the browser leaves out of validation, to a text
+  input laid invisibly over the field, with `tabindex="-1"` and
+  `aria-hidden="true"`. A `required` field that is empty, incomplete or holds a
+  rejected date now stops the submit, and the browser puts focus on its first
+  empty section with its own message over the field. This applies to the date
+  and time pickers and to both ends of a date range as well. Code that selects
+  `input[type="hidden"]` inside the field needs `.form-date-time > input`.
 
 #### Time Picker
 

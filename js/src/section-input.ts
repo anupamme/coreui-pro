@@ -79,6 +79,7 @@ const HOST_CLASS_NAMES = [
 const SELECTOR_FORM_VALIDATE = '[data-coreui-validate]'
 const SELECTOR_FORM_VALIDATE_VALID = '[data-coreui-validate~="valid"]'
 const SELECTOR_SECTION = '.form-date-time-section'
+const SELECTOR_VALUE_INPUT = 'input'
 
 export type SectionInputConfig = {
   ariaDayLabel: string
@@ -413,6 +414,10 @@ abstract class SectionInput<C extends SectionInputConfig = SectionInputConfig> e
       this._selectSectionContent(event.target)
     })
 
+    EventHandler.on(this._element, eventName('focusin'), SELECTOR_VALUE_INPUT, () => {
+      this._focusFirstEmptySection()
+    })
+
     EventHandler.on(this._element, eventName('mousedown'), SELECTOR_SECTION, (event: any) => {
       if (this._config.disabled) {
         return
@@ -466,11 +471,15 @@ abstract class SectionInput<C extends SectionInputConfig = SectionInputConfig> e
         return
       }
 
-      const sections = this._getSectionElements()
-      const target = sections.find((sectionElement, index) => this._getSection(index).value === null) || sections[0]
-
-      target?.focus()
+      this._focusFirstEmptySection()
     })
+  }
+
+  _focusFirstEmptySection(): void {
+    const sections = this._getSectionElements()
+    const target = sections.find((sectionElement, index) => this._getSection(index).value === null) || sections[0]
+
+    target?.focus()
   }
 
   _onFormSubmit(): void {
@@ -814,9 +823,13 @@ abstract class SectionInput<C extends SectionInputConfig = SectionInputConfig> e
     }
 
     this._inputElement = document.createElement('input')
-    this._inputElement.type = 'hidden'
+    this._inputElement.type = 'text'
+    this._inputElement.autocomplete = 'off'
     this._inputElement.disabled = disabled
+    this._inputElement.readOnly = readonly
     this._inputElement.required = required
+    this._inputElement.tabIndex = -1
+    this._inputElement.setAttribute('aria-hidden', 'true')
 
     if (name) {
       this._inputElement.name = name
